@@ -1,16 +1,28 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './src/firebase'; // Update path as needed
 import AppNavigator from './src/navigation/AppNavigator';
+import Login from './src/screens/Login';
 
 export default function App() {
+  const [user, setUser] = useState(null);
+  const [initializing, setInitializing] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setInitializing(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (initializing) return null; // Optionally show splash screen here
+
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <StatusBar style="light" backgroundColor="#0D0D0D" />
-        <AppNavigator />
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <NavigationContainer>
+      {user ? <AppNavigator /> : <Login />}
+    </NavigationContainer>
   );
 }
