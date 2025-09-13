@@ -75,61 +75,66 @@ const Login = () => {
 
       <Text style={styles.title}>Friday Night Rides</Text>
 
-      <View style={styles.inputContainer}>
-        <Feather name="mail" size={18} color="#888" style={styles.icon} />
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor="#888"
-          selectionColor="#fff"
-          style={styles.input}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
-        />
-      </View>
+      {/* 👇 Add a padded wrapper */}
+      <View style={styles.formWrapper}>
+        <View style={styles.inputContainer}>
+          <Feather name="mail" size={18} color="#888" style={styles.icon} />
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#888"
+            selectionColor="#fff"
+            style={styles.input}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
 
-      <View style={styles.inputContainer}>
-        <Feather name="lock" size={18} color="#888" style={styles.icon} />
-        <TextInput
-          placeholder="Password"
-          placeholderTextColor="#888"
-          selectionColor="#fff"
-          style={styles.input}
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <Feather name="lock" size={18} color="#888" style={styles.icon} />
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#888"
+            selectionColor="#fff"
+            style={styles.input}
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+        </View>
 
-      <TouchableOpacity style={styles.forgotBtn}>
-        <Text style={styles.forgotText}>Forgot password?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-        <Text style={styles.loginText}>Login</Text>
-      </TouchableOpacity>
-
-      <View style={styles.signupContainer}>
-        <Text style={styles.signupText}>New here?</Text>
-        <TouchableOpacity
-          onPress={() =>
-            Alert.alert('Coming Soon...', 'FNR is currently invite-only.')
-          }
-        >
-          <Text style={styles.signupLink}> Sign up</Text>
+        <TouchableOpacity style={styles.forgotBtn}>
+          <Text style={styles.forgotText}>Forgot password?</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+          <Text style={styles.loginText}>Login</Text>
+        </TouchableOpacity>
+
+        <View style={styles.signupContainer}>
+          <Text style={styles.signupText}>New here?</Text>
+          <TouchableOpacity
+            onPress={() =>
+              Alert.alert('Coming Soon...', 'FNR is currently invite-only.')
+            }
+          >
+            <Text style={styles.signupLink}> Sign up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
-    padding: 26,
     justifyContent: 'center',
+  },
+  formWrapper: {
+    paddingHorizontal: 26, // 👈 Ensures consistent side spacing
   },
   logo: {
     width: 150,
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '600',
     fontFamily: 'FugazOne_400Regular',
     marginBottom: 36,
