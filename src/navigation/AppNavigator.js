@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-import DashboardScreen from '../screens/Dashboard';
 import EventsScreen from '../screens/Events';
 import Map from '../screens/Map';
 import RidersScreen from '../screens/Riders';
@@ -28,9 +27,6 @@ const AppNavigator = () => {
           let iconName;
 
           switch (route.name) {
-            case 'Dashboard':
-              iconName = 'home';
-              break;
             case 'Events':
               iconName = 'calendar';
               break;
@@ -60,13 +56,13 @@ const AppNavigator = () => {
         tabBarStyle: {
           backgroundColor: '#1a1a1a',
           borderTopColor: '#333',
+          paddingTop: 3,
           paddingBottom: 6,
           height: 65,
         },
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Events" component={EventsScreen} />
       <Tab.Screen name="Map" component={Map} />
       <Tab.Screen name="Riders" component={RidersScreen} />
@@ -74,14 +70,5 @@ const AppNavigator = () => {
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  mapIconWrapper: {
-    backgroundColor: '#2c2c2e',
-    padding: 12,
-    borderRadius: 32,
-    marginBottom: 10,
-  },
-});
 
 export default AppNavigator;

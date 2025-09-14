@@ -17,7 +17,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation(); // ✅ Fix here
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -29,7 +29,6 @@ const Login = () => {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
 
-      // ✅ Safe navigation
       if (navigation?.replace) {
         navigation.replace('MainApp');
       } else {
