@@ -34,3 +34,6 @@ yarn-error.*
 
 # Typescript
 *.tsbuildinfo
+
+# Documentation files
+docs/

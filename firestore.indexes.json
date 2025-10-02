@@ -1,0 +1,40 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "email",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "username",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "friendRequests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "toUserId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
+

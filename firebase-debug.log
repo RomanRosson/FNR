@@ -1,0 +1,14 @@
+[debug] [2025-09-30T07:07:23.412Z] ----------------------------------------------------------------------
+[debug] [2025-09-30T07:07:23.414Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\roman\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js use FridayNightRides
+[debug] [2025-09-30T07:07:23.414Z] CLI Version:   14.15.1
+[debug] [2025-09-30T07:07:23.414Z] Platform:      win32
+[debug] [2025-09-30T07:07:23.414Z] Node Version:  v24.8.0
+[debug] [2025-09-30T07:07:23.415Z] Time:          Tue Sep 30 2025 17:07:23 GMT+1000 (Australian Eastern Standard Time)
+[debug] [2025-09-30T07:07:23.415Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-30T07:07:23.416Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-09-30T07:07:23.544Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-09-30T07:07:23.544Z] > authorizing via signed-in user (itsgroovybusiness@gmail.com)
+[error] 
+[error] Error: Invalid project id: FridayNightRides.
+Note: Project id must be all lowercase.

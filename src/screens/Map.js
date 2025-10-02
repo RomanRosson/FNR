@@ -11,7 +11,7 @@ const Map = () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status !== 'granted') {
-        Alert.alert('Permission denied', 'Location access is required.');
+        Alert.alert('Permission denied', 'Location access is required.', [], { cancelable: true });
         return;
       }
 

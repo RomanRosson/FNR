@@ -13,27 +13,59 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation();
+  const navigation = useNavigation(); // ✅ Fix here
+
+  const ensureUserDocument = async (user) => {
+    try {
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (!userDoc.exists()) {
+        // Create user document if it doesn't exist
+        const userData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || 'Rider Name',
+          dateCreated: new Date().toISOString(),
+          dateLastAccessed: new Date().toISOString(),
+          username: user.displayName || 'Rider Name',
+          dob: null, // Can be added later
+        };
+        
+        await setDoc(userDocRef, userData);
+        console.log('User document created in Firestore');
+      } else {
+        // Update last accessed date
+        await setDoc(userDocRef, {
+          dateLastAccessed: new Date().toISOString(),
+        }, { merge: true });
+      }
+    } catch (error) {
+      console.error('Error ensuring user document:', error);
+    }
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Missing Info', 'Please enter both email and password.');
+      Alert.alert('Missing Info', 'Please enter both email and password.', [], { cancelable: true });
       return;
     }
 
     try {
       const auth = getAuth();
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      if (navigation?.replace) {
-        navigation.replace('MainApp');
-      } else {
-        console.warn('[Login] navigation.replace is not available.');
-      }
+      // Create user document in Firestore if it doesn't exist
+      await ensureUserDocument(user);
+
+      // Navigation is handled automatically by App.js based on auth state
 
     } catch (error) {
       let message = 'Something went wrong. Please try again.';
@@ -58,7 +90,7 @@ const Login = () => {
           console.log('[Login] Unhandled error:', error.code, error.message);
       }
 
-      Alert.alert('Login Failed', message);
+      Alert.alert('Login Failed', message, [], { cancelable: true });
     }
   };
 
@@ -74,66 +106,59 @@ const Login = () => {
 
       <Text style={styles.title}>Friday Night Rides</Text>
 
-      {/* 👇 Add a padded wrapper */}
-      <View style={styles.formWrapper}>
-        <View style={styles.inputContainer}>
-          <Feather name="mail" size={18} color="#888" style={styles.icon} />
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="#888"
-            selectionColor="#fff"
-            style={styles.input}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
+      <View style={styles.inputContainer}>
+        <Feather name="mail" size={18} color="#888" style={styles.icon} />
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#888"
+          selectionColor="#fff"
+          style={styles.input}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
 
-        <View style={styles.inputContainer}>
-          <Feather name="lock" size={18} color="#888" style={styles.icon} />
-          <TextInput
-            placeholder="Password"
-            placeholderTextColor="#888"
-            selectionColor="#fff"
-            style={styles.input}
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-        </View>
+      <View style={styles.inputContainer}>
+        <Feather name="lock" size={18} color="#888" style={styles.icon} />
+        <TextInput
+          placeholder="Password"
+          placeholderTextColor="#888"
+          selectionColor="#fff"
+          style={styles.input}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+      </View>
 
-        <TouchableOpacity style={styles.forgotBtn}>
-          <Text style={styles.forgotText}>Forgot password?</Text>
+      <TouchableOpacity style={styles.forgotBtn}>
+        <Text style={styles.forgotText}>Forgot password?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+
+      <View style={styles.signupContainer}>
+        <Text style={styles.signupText}>New here?</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SignUp')}
+        >
+          <Text style={styles.signupLink}> Sign up</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-          <Text style={styles.loginText}>Login</Text>
-        </TouchableOpacity>
-
-        <View style={styles.signupContainer}>
-          <Text style={styles.signupText}>New here?</Text>
-          <TouchableOpacity
-            onPress={() =>
-              Alert.alert('Coming Soon...', 'FNR is currently invite-only.')
-            }
-          >
-            <Text style={styles.signupLink}> Sign up</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#121212',
+    padding: 26,
     justifyContent: 'center',
-  },
-  formWrapper: {
-    paddingHorizontal: 26, // 👈 Ensures consistent side spacing
   },
   logo: {
     width: 150,
@@ -145,11 +170,12 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#fff',
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: '600',
     fontFamily: 'FugazOne_400Regular',
     marginBottom: 36,
     alignSelf: 'center',
+    textAlign: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -174,7 +200,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     color: '#1877F2',
-    fontSize: 14,
+    fontSize: 15,
   },
   loginBtn: {
     backgroundColor: '#1877F2',
